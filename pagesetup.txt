@@ -1,3 +1,5 @@
+Basic code for a new page is below, should update as necessary.
+
 <!DOCTYPE html>
 <html>
 
