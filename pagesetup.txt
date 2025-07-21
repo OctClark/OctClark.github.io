@@ -9,7 +9,7 @@
 <body>
 
 <h1>
-About
+[insert title here]
 </h1>
 
 <p>
