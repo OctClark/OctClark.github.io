@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<link rel="stylesheet" href="https://unpkg.com/bamboo.css">
+
+<head>
+</head>
+
+<body>
+	<div class="topnav">
+		<a href="../../index.html">Home</a> /
+		<a href="../projecthome.html">Projects</a> /
+		<a href="../archive.html">Archive</a> /
+		<a href="../../about.html">Contact</a>
+	</div>
+
+	<h1>
+		The Most Basic Arcade Game
+	</h1>
+
+	<p>
+		<i>Started: 21st July 2025 </i>
+	</p>
+
+	<p>
+		The initial part of this I made several months ago, following a free online course.
+	</p>
+	
+	<! THIS MIGHT NEED TO BE MADE RELATIVE AT SOME POINT - CAN'T WORK OUT HOW CURRENTLY >
+
+	<canvas id="gameCanvas"
+			width=600
+			height=400>
+	</canvas>
+
+	<script>
+		var canvas;
+		var canvasContext;
+		var ballX = 300;
+		var ballSpeedX = 15;
+		var ballY = 300;
+		var ballSpeedY = 6;
+		const BALL_RAD = 15;
+
+		var paddle1Y = 250;
+		var paddle2Y = 250;
+		const PADDLE_HEIGHT = 100;
+		const PADDLE_THK = 15;
+		var paddleSpeed = 10;
+
+		var p1Score = 0;
+		var p2Score = 0;
+		const WIN_CON = 3;
+		var showWinScreen = false;
+
+		function calcMousePos(evt) {
+			var rect = canvas.getBoundingClientRect();
+			var root = document.documentElement;
+			var mouseX = evt.clientX - rect.left - root.scrollLeft;
+			var mouseY = evt.clientY - rect.top - root.scrollTop;
+			return {
+				x: mouseX,
+				y: mouseY
+			};
+		}
+
+		function handleMouseClick(evt) {
+			if (showWinScreen) {
+				p1Score = 0;
+				p2Score = 0;
+				showWinScreen = false;
+			}
+		}
+
+		window.onload = function () {
+			console.log("Hi");
+			canvas = document.getElementById('gameCanvas');
+			canvasContext = canvas.getContext('2d');
+
+			var framesPerSec = 30;
+			setInterval(function () {
+				moveAll();
+				drawAll();
+			}, 1000 / framesPerSec);
+
+			canvas.addEventListener('mousemove',
+				function (evt) {
+					var mousePos = calcMousePos(evt);
+					paddle1Y = mousePos.y - PADDLE_HEIGHT / 2;
+				});
+
+			canvas.addEventListener('mousedown', handleMouseClick);
+		}
+
+		function ballReset() {
+			if ((p2Score >= WIN_CON) ||
+				(p1Score >= WIN_CON)) {
+				showWinScreen = true
+			}
+			ballX = canvas.width / 2;
+			ballY = canvas.height / 2;
+			ballSpeedX = -ballSpeedX
+
+		}
+
+		function compMove() {
+			//moves right hand paddle (tolerance of 30)
+			if (paddle2Y + PADDLE_HEIGHT / 2 < ballY - 30) {
+				paddle2Y += paddleSpeed;
+			} else if (paddle2Y + PADDLE_HEIGHT / 2 > ballY + 30) {
+				paddle2Y -= paddleSpeed;
+			}
+		}
+
+		function moveAll() {
+			if (showWinScreen) {
+				return;
+			}
+			compMove()
+
+			ballX += ballSpeedX;
+			ballY += ballSpeedY;
+
+			//reflect if hit right paddle
+			if (ballX > canvas.width - BALL_RAD - PADDLE_THK) {
+				if (ballY > paddle2Y &&
+					ballY < paddle2Y + PADDLE_HEIGHT) {
+					ballSpeedX = -ballSpeedX;
+					var deltaY = ballY
+						- (paddle2Y + PADDLE_HEIGHT / 2);
+					ballSpeedY = deltaY * 0.35;
+				}
+			}
+			if (ballX > canvas.width) {
+				p1Score += 1;
+				ballReset();
+			}
+
+			//reflect if hit left paddle
+			if (ballX < BALL_RAD + PADDLE_THK) {
+				if (ballY > paddle1Y &&
+					ballY < paddle1Y + PADDLE_HEIGHT) {
+					ballSpeedX = -ballSpeedX;
+					var deltaY = ballY
+						- (paddle1Y + PADDLE_HEIGHT / 2);
+					ballSpeedY = deltaY * 0.35;
+				}
+			}
+			if (ballX < 0) {
+				p2Score += 1;
+				ballReset();
+			}
+
+			//ceiling and floor bounds
+			if (ballY > canvas.height - BALL_RAD) {
+				ballSpeedY = -ballSpeedY
+			}
+			if (ballY < BALL_RAD) {
+				ballSpeedY = -ballSpeedY
+			}
+		}
+
+		function drawNet() {
+			for (var i = 10; i < canvas.height; i += 40) {
+				colourRect(canvas.width / 2 - 2, i, 4, 20, 'grey')
+			}
+		}
+
+		function drawAll() {
+			// black background
+			colourRect(0, 0, canvas.width, canvas.height, 'black')
+
+			if (showWinScreen) {
+				canvasContext.fillStyle = 'white';
+				if (p2Score >= WIN_CON) {
+					canvasContext.fillText("Computer Won!", canvas.width / 2 - 38, canvas.height / 3);
+				}
+				else if (p1Score >= WIN_CON) {
+					canvasContext.fillText("You Won!", canvas.width / 2 - 22, canvas.height / 3);
+				}
+				canvasContext.fillText("Click to Continue", canvas.width / 2 - 40, canvas.height / 2);
+				return;
+			}
+
+			// grey dashed centre line
+			drawNet()
+
+			// left player paddle
+			colourRect(0, paddle1Y, PADDLE_THK, PADDLE_HEIGHT, 'white');
+
+			// right player paddle
+			colourRect(canvas.width - PADDLE_THK, paddle2Y,
+				PADDLE_THK, PADDLE_HEIGHT, 'white');
+
+			// white ball
+			colourCirc(ballX, ballY, BALL_RAD, 'white');
+
+			canvasContext.fillText(p1Score, 100, 100);
+			canvasContext.fillText(p2Score, canvas.width - 100, 100);
+		}
+
+		function colourCirc(cenX, cenY, rad, colour) {
+			canvasContext.fillStyle = colour;
+			canvasContext.beginPath();
+			canvasContext.arc(cenX, cenY, rad, 0, Math.PI * 2, true);
+			canvasContext.fill();
+		}
+
+		function colourRect(leftX, topY, width, height, colour) {
+			canvasContext.fillStyle = colour;
+			canvasContext.fillRect(leftX, topY, width, height);
+		}
+
+		//currently not in use:
+		function dispWin(player) {
+			console.log("Game End");
+			canvasContext.fillText('GameEnd', 200, 200);
+			canvasContext.fillText('Winner is', 200, 100);
+			canvasContext.fillText(player, 200, 100);
+		}
+
+	</script>
+
+</body>
+
+</html>
