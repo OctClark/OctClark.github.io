@@ -27,9 +27,22 @@
         </h2>
 
         put posts from 2025 here...
+
         <article>
             <header>
                 <h4>date here <br> <a href="posts/postsetup.html">Basic Post</a></h4>
+            </header>
+        </article>
+
+        <article>
+            <header>
+                <h4>2025-09-01 <br><a href="posts/2025-09-01-spritesthebeginning.html">Sprites: The Beginning</a></h4>
+            </header>
+        </article>
+
+        <article>
+            <header>
+                <h4>2025-08-01 <br><a href="posts/2025-09-01-chestofdrawers.html">Chest of Drawers Makeover</a></h4>
             </header>
         </article>
 
@@ -46,21 +59,6 @@
         </article>
 
     </section>
-
-    <div class="posts">
-        {% for post in site.posts %}
-        <article class="post">
-
-            <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
-
-            <div class="entry">
-                {{ post.excerpt }}
-            </div>
-
-            <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-        </article>
-        {% endfor %}
-    </div>
 
 </body>
 
