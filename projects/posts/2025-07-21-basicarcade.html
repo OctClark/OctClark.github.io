@@ -182,6 +182,12 @@
 			// black background
 			colourRect(0, 0, canvas.width, canvas.height, 'black')
 
+            if (showStartScreen) {
+                canvasContext.fillStyle = 'white';
+                canvasContext.fillText("Click to Start", canvas.width / 2 - 40, canvas.height / 2);
+                return;
+            }
+
 			if (showWinScreen) {
 				canvasContext.fillStyle = 'white';
 				if (p2Score >= WIN_CON) {
@@ -220,14 +226,6 @@
 		function colourRect(leftX, topY, width, height, colour) {
 			canvasContext.fillStyle = colour;
 			canvasContext.fillRect(leftX, topY, width, height);
-		}
-
-		//currently not in use:
-		function dispWin(player) {
-			console.log("Game End");
-			canvasContext.fillText('GameEnd', 200, 200);
-			canvasContext.fillText('Winner is', 200, 100);
-			canvasContext.fillText(player, 200, 100);
 		}
 
 	</script>
