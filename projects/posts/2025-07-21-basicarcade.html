@@ -125,13 +125,10 @@
 		}
 
 		function moveAll() {
-			if (showWinScreen) {
+            if ((showWinScreen) || (showStartScreen)) {
 				return;
 			}
 
-            if (showStartScreen) {
-                return;
-            }
 			compMove()
 
 			ballX += ballSpeedX;
