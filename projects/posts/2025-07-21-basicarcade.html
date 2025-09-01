@@ -23,9 +23,16 @@
 	</p>
 
 	<p>
-		The initial part of this I made several months ago, following a free online course.
+		The initial part of this I made several months ago, following a free online course from Udemy:
+		'Code Your First Game: Arcade Classic in JavaScript on Canvas' by Chris DeLeon. To be honest,
+		JavaScript I've also never used before, but it feels much more similar to Python, which I have
+		a basic understanding of, than HTML.
 	</p>
-	
+
+	<p>
+		Currently the game is set to be over after 3 wins from either side. The left side is player-controlled, and the right automatic.
+	</p>
+
 	<! THIS MIGHT NEED TO BE MADE RELATIVE AT SOME POINT - CAN'T WORK OUT HOW CURRENTLY >
 
 	<canvas id="gameCanvas"
@@ -52,6 +59,7 @@
 		var p2Score = 0;
 		const WIN_CON = 3;
 		var showWinScreen = false;
+		var showStartScreen = true;
 
 		function calcMousePos(evt) {
 			var rect = canvas.getBoundingClientRect();
@@ -70,6 +78,10 @@
 				p2Score = 0;
 				showWinScreen = false;
 			}
+
+            if (showStartScreen) {
+                showStartScreen = false;
+            }
 		}
 
 		window.onload = function () {
@@ -189,8 +201,7 @@
 			colourRect(0, paddle1Y, PADDLE_THK, PADDLE_HEIGHT, 'white');
 
 			// right player paddle
-			colourRect(canvas.width - PADDLE_THK, paddle2Y,
-				PADDLE_THK, PADDLE_HEIGHT, 'white');
+			colourRect(canvas.width - PADDLE_THK, paddle2Y, PADDLE_THK, PADDLE_HEIGHT, 'white');
 
 			// white ball
 			colourCirc(ballX, ballY, BALL_RAD, 'white');
@@ -220,6 +231,12 @@
 		}
 
 	</script>
+
+	<p>
+		I'd like to play around a bit more; add a start screen, and a restart game button for when the 
+		ball gets trapped between the paddle and the screen edge (which I've seen happen once). This 
+		is not a challenge!!! 
+	</p>
 
 </body>
 
